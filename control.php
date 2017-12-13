@@ -17,12 +17,12 @@
 		if (!empty($_POST['usuario']) && !empty($_POST['pass'])) {
 
 		mysql_connect('localhost', 'root', '');
-		mysql_select_db('simple_stock');
+		mysql_select_db('inventario_simple');
 
 		$user_name = mysql_real_escape_string($_POST['usuario']);
 
-		$sql1 = "SELECT * FROM users 
-				WHERE user_name = '".$user_name."';";
+		$sql1 = "SELECT * FROM usuarios 
+				WHERE nombre_usuario = '".$user_name."';";
 
 				$respuesta = mysql_query($sql1);
 
@@ -34,7 +34,7 @@
 					
 					$resultado = mysql_fetch_array($respuesta);
 
-						if (password_verify($_POST['pass'], $resultado['user_password_hash'])) {
+						if (password_verify($_POST['pass'], $resultado['contraseña'])) {
 								
 								$_SESSION["autentificado"] = 'si';
 								$_SESSION["user"] = $_POST['usuario'];

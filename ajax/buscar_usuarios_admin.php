@@ -4,16 +4,16 @@
 	include('../seguridad.php');
 	$action = (isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
 	if (isset($_GET['id'])){
-		$user_id=intval($_GET['id']);
-		$query=mysqli_query($con, "select user_id, firstname, lastname, user_name, user_password_hash, user_email, date_added, id_rol from users where user_id='".$user_id."inner join roles on users.id_rol = roles.id_rol'");
+		$id_usuario=intval($_GET['id']);
+		$query=mysqli_query($con, "select * from usuarios where id_usuario = '".$user_id." inner join roles on usuarios.id_rol = roles.id_rol'");
 		$rw_user=mysqli_fetch_array($query);
-		$count=$rw_user['user_id'];
+		$count=$rw_user['id_usuario'];
 		if ($user_id!=1){
-			if ($delete1=mysqli_query($con,"DELETE FROM users WHERE user_id='".$user_id."'")){
+			if ($delete1=mysqli_query($con,"update set estado_usuario = 0 FROM usuarios WHERE id_usuario='".$user_id."'")){
 			?>
 			<div class="alert alert-success alert-dismissible" role="alert">
 			  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			  <strong>Aviso!</strong> Datos eliminados exitosamente.
+			  <strong>Aviso!</strong> Datos cambiados exitosamente.
 			</div>
 			<?php 
 		}else {
@@ -41,8 +41,8 @@
 	if($action == 'ajax'){
 		
          $q = mysqli_real_escape_string($con,(strip_tags($_REQUEST['q'], ENT_QUOTES)));
-		 $aColumns = array('firstname', 'lastname');
-		 $sTable = "users";
+		 $aColumns = array('nombres', 'apellidos');
+		 $sTable = "usuarios";
 		 $sTable1 = "roles";
 		 $sWhere = "";
 		if ( $_GET['q'] != "" )
@@ -63,7 +63,7 @@
 		$adjacents  = 4;
 		$offset = ($page - 1) * $per_page;
 		
-		$count_query   = mysqli_query($con, "SELECT count(*) AS numrows FROM $sTable  $sWhere");
+		$count_query = mysqli_query($con, "SELECT count(*) AS numrows FROM $sTable $sWhere");
 		$row= mysqli_fetch_array($count_query);
 		$numrows = $row['numrows'];
 		$total_pages = ceil($numrows/$per_page);
@@ -82,40 +82,40 @@
 					<th>Nombres</th>
 					<th>Usuario</th>
 					<th>Email</th>
-					<th>Agregado</th>
 					<th>Rol</th>
+					<th>Estado</th>
 					<th><span class="pull-right">Acciones</span></th>
 					
 				</tr>
 				<?php
 				while ($row=mysqli_fetch_array($query)){
-						$user_id=$row['user_id'];
-						$fullname=$row['firstname']." ".$row["lastname"];
-						$user_name=$row['user_name'];
-						$user_email=$row['user_email'];
-						$id_rol=$row['descripcion'];
-						$date_added= date('d/m/Y', strtotime($row['date_added']));
+						$id_usuario = $row['id_usuario'];
+						$nombres = $row['nombres']." ".$row["apellidos"];
+						$nombre_usuario = $row['nombre_usuario'];
+						$correo = $row['correo'];
+						$id_rol = $row['descripcion'];
+						$estado_usuario = $row['estado_usuario'];
 						
 					?>
 					
-					<input type="hidden" value="<?php echo $row['firstname'];?>" id="nombres<?php echo $user_id;?>">
-					<input type="hidden" value="<?php echo $row['lastname'];?>" id="apellidos<?php echo $user_id;?>">
-					<input type="hidden" value="<?php echo $user_name;?>" id="usuario<?php echo $user_id;?>">
-					<input type="hidden" value="<?php echo $user_email;?>" id="email<?php echo $user_id;?>">
-					<input type="hidden" value="<?php echo $id_rol;?>" id="descripcion<?php echo $user_id;?>">
+					<input type="hidden" value="<?php echo $row['nombres'];?>" id="nombres<?php echo $id_usuario;?>">
+					<input type="hidden" value="<?php echo $row['apellidos'];?>" id="apellidos<?php echo $id_usuario;?>">
+					<input type="hidden" value="<?php echo $nombre_usuario;?>" id="usuario<?php echo $id_usuario;?>">
+					<input type="hidden" value="<?php echo $correo;?>" id="email<?php echo $id_usuario;?>">
+					<input type="hidden" value="<?php echo $id_rol;?>" id="descripcion<?php echo $id_usuario;?>">
 				
 					<tr>
-						<td><?php echo $user_id; ?></td>
-						<td><?php echo $fullname; ?></td>
-						<td ><?php echo $user_name; ?></td>
-						<td ><?php echo $user_email; ?></td>
-						<td><?php echo $date_added;?></td>
+						<td><?php echo $id_usuario; ?></td>
+						<td><?php echo $nombres; ?></td>
+						<td ><?php echo $nombre_usuario; ?></td>
+						<td ><?php echo $correo; ?></td>
 						<td><?php echo $id_rol; ?></td>
+						<td><?php echo $estado_usuario; ?></td>
 						
 					<td ><span class="pull-right">
-					<a href="#" class='btn btn-default' title='Editar usuario' onclick="obtener_datos('<?php echo $user_id;?>');" data-toggle="modal" data-target="#myModal2"><i class="glyphicon glyphicon-edit"></i></a> 
-					<a href="#" class='btn btn-default' title='Cambiar contraseña' onclick="get_user_id('<?php echo $user_id;?>');" data-toggle="modal" data-target="#myModal3"><i class="glyphicon glyphicon-cog"></i></a>
-					<a href="#" class='btn btn-default' title='Borrar usuario' onclick="eliminar('<? echo $user_id; ?>')"><i class="glyphicon glyphicon-trash"></i> </a></span></td>
+					<a href="#" class='btn btn-default' title='Editar usuario' onclick="obtener_datos('<?php echo $id_usuario;?>');" data-toggle="modal" data-target="#myModal2"><i class="glyphicon glyphicon-edit"></i></a> 
+					<a href="#" class='btn btn-default' title='Cambiar contraseña' onclick="get_user_id('<?php echo $id_usuario;?>');" data-toggle="modal" data-target="#myModal3"><i class="glyphicon glyphicon-cog"></i></a>
+					<a href="#" class='btn btn-default' title='Borrar usuario' onclick="cambiar estado('<? echo $id_usuario; ?>')"><i class="glyphicon glyphicon-trash"></i> </a></span></td>
 						
 					</tr>
 					<?php

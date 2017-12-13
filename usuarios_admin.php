@@ -142,10 +142,10 @@ $( "#editar_password" ).submit(function( event ) {
 			var rol = $("#rol"+id).val();
 			
 			$("#mod_id").val(id);
-			$("#firstname2").val(nombres);
-			$("#lastname2").val(apellidos);
-			$("#user_name2").val(usuario);
-			$("#user_email2").val(email);
+			$("#nombres2").val(nombres);
+			$("#apellidos2").val(apellidos);
+			$("#nombre_usuario2").val(usuario);
+			$("#correo2").val(email);
 			$("#id_rol").val(rol);
 			
 		}

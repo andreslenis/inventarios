@@ -8,18 +8,14 @@
 	$active_productos="active";
 	$active_clientes="";
 	$active_usuarios="";	
-	$title="Producto | Simple Stock";
+	$title="Producto | Inventario Simple";
+	$usuario=$_SESSION["user"];
 	
 	if (isset($_POST['reference']) and isset($_POST['quantity'])){
 		$quantity=intval($_POST['quantity']);
 		$reference=mysqli_real_escape_string($con,(strip_tags($_POST["reference"],ENT_QUOTES)));
 		$id_producto=intval($_GET['id']);
-		/*$user_id=$_SESSION['user_id'];
-		$firstname=$_SESSION['firstname'];
-		$nota="$firstname agregó $quantity producto(s) al inventario";
-		$fecha=date("Y-m-d H:i:s");
-		guardar_historial($id_producto,$user_id,$fecha,$nota,$reference,$quantity);*/
-		$update=agregar_stock($id_producto,$quantity);
+		$update=agregar_stock($id_producto,$quantity,$usuario);
 		if ($update==1){
 			$message=1;
 		} else {
@@ -31,11 +27,6 @@
 		$quantity=intval($_POST['quantity_remove']);
 		$reference=mysqli_real_escape_string($con,(strip_tags($_POST["reference_remove"],ENT_QUOTES)));
 		$id_producto=intval($_GET['id']);
-		/*$user_id=$_SESSION['user_id'];
-		$firstname=$_SESSION['firstname'];
-		$nota="$firstname eliminó $quantity producto(s) del inventario";
-		$fecha=date("Y-m-d H:i:s");
-		guardar_historial($id_producto,$user_id,$fecha,$nota,$reference,$quantity);*/
 		$update=eliminar_stock($id_producto,$quantity);
 		if ($update==1){
 			$message=1;
@@ -46,7 +37,7 @@
 	
 	if (isset($_GET['id'])){
 		$id_producto=intval($_GET['id']);
-		$query=mysqli_query($con,"select * from products where id_producto='$id_producto'");
+		$query=mysqli_query($con,"select * from inventarios t1 inner join productos t2 on id_inventario.t1 = id_inventario.t2 inner join usuarios t3 on id_usuario.t2 = id_usuario.t3 where id_producto='$id_producto' and nombre_usuario ='$usuario'");
 		$row=mysqli_fetch_array($query);
 		
 	} else {
@@ -65,7 +56,7 @@
 	include("modal/agregar_stock_gerente.php");
 	include("modal/eliminar_stock_gerente.php");
 	include("modal/editar_productos_gerente.php");
-	
+	include("footer.php");
 	?>
 	
 	<div class="container">
@@ -79,7 +70,7 @@
 				 <img class="item-img img-responsive" src="img/stock.png" alt=""> 
 				  <br>
                     <a href="#" class="btn btn-danger" onclick="eliminar('<?php echo $row['id_producto'];?>')" title="Eliminar"> <i class="glyphicon glyphicon-trash"></i> Eliminar </a> 
-					<a href="#myModal2" data-toggle="modal" data-codigo='<?php echo $row['codigo_producto'];?>' data-nombre='<?php echo $row['nombre_producto'];?>' data-categoria='<?php echo $row['id_categoria']?>' data-precio='<?php echo $row['precio_producto']?>' data-stock='<?php echo $row['stock'];?>' data-id='<?php echo $row['id_producto'];?>' class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-pencil"></i> Editar </a>	
+					<a href="#myModal2" data-toggle="modal" data-codigo='<?php echo $row['codigo_producto'];?>' data-nombre='<?php echo $row['nombre_producto'];?>' data-categoria='<?php echo $row['id_categoria']?>' data-precio='<?php echo $row['precio_venta']?>' class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-pencil"></i> Editar </a>	
 					
               </div>
 			  
@@ -92,24 +83,24 @@
                       <span class="item-number"><?php echo $row['codigo_producto'];?></span>
                     </div>
                     <div class="col-sm-12">
-                      <span class="current-stock">Talla</span>
+                      <span class="current-stock">Descripcion</span>
                     </div>
                     <div class="col-sm-12 margin-btm-10">
-                      <span class="item-number"><?php echo $row['talla'];?></span>
+                      <span class="item-number"><?php echo $row['descripcion_producto'];?></span>
                     </div>
                     <div class="col-sm-12 margin-btm-10">
                     </div>
                     <div class="col-sm-12">
-                      <span class="current-stock">Stock disponible</span>
+                      <span class="current-stock">Inventario disponible</span>
                     </div>
                     <div class="col-sm-12 margin-btm-10">
-                      <span class="item-quantity"><?php echo number_format($row['stock'],2);?></span>
+                      <span class="item-quantity"><?php echo number_format($row['cantidad_inventario'],2);?></span>
                     </div>
 					<div class="col-sm-12">
                       <span class="current-stock"> Precio venta</span>
                     </div>
 					<div class="col-sm-12">
-                      <span class="item-price">$ <?php echo number_format($row['precio_producto'],2);?></span>
+                      <span class="item-price">$ <?php echo number_format($row['precio_venta'],2);?></span>
                     </div>
 					
                     <div class="col-sm-12 margin-btm-10">
@@ -150,50 +141,7 @@
 							<?php
 						}
 					?>	
-					 <!--<table class='table table-bordered'>
-						<tr>
-							<th class='text-center' colspan=5 >HISTORIAL DE INVENTARIO</th>
-						</tr>
-						<tr>
-							<td>Fecha</td>
-							<td>Hora</td>
-							<td>Descripción</td>
-							<td>Referencia</td>
-							<td class='text-center'>Total</td>
-						</tr>-->
-						<?php/*
-							$query=mysqli_query($con,"select * from historial where id_producto='$id_producto'");
-							while ($row=mysqli_fetch_array($query)){
-								*/?>
-						<!--<tr>
-							<td><?php echo date('d/m/Y', strtotime($row['fecha']));?></td>
-							<td><?php echo date('H:i:s', strtotime($row['fecha']));?></td>
-							<td><?php echo $row['nota'];?></td>
-							<td><?php echo $row['referencia'];?></td>
-							<td class='text-center'><?php echo number_format($row['cantidad'],2);?></td>
-						</tr>-->		
-								<?php/*
-							}
-						*/?>
-					 <!--</table>
-                  </div>
-                                    
-                                    
-				</div>
-            </div>
-          </div>
-        </div>
-    </div>
-</div>
 
-
-
-</div>-->
-
-	
-	<?php
-	include("footer.php");
-	?>
 	<script type="text/javascript" src="js/productos_gerente.js"></script>
   </body>
 </html>
@@ -235,9 +183,9 @@ $( "#editar_producto" ).submit(function( event ) {
 		modal.find('.modal-body #mod_codigo').val(codigo)
 		modal.find('.modal-body #mod_nombre').val(nombre)
 		modal.find('.modal-body #mod_categoria').val(categoria)
-		modal.find('.modal-body #mod_talla').val(talla)
+		modal.find('.modal-body #mod_descripcion').val(talla)
 		modal.find('.modal-body #mod_precio').val(precio)
-		modal.find('.modal-body #mod_stock').val(stock)
+		modal.find('.modal-body #mod_inventario').val(stock)
 		modal.find('.modal-body #mod_id').val(id)
 	})
 	

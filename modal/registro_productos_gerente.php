@@ -34,7 +34,7 @@
 					<select class='form-control' name='categoria' id='categoria' required>
 						<option value="">Selecciona una categoría</option>
 							<?php 
-							$query_categoria=mysqli_query($con,"select * from categorias order by nombre_categoria");
+							$query_categoria=mysqli_query($con,"select * from categoria order by nombre_categoria");
 							while($rw=mysqli_fetch_array($query_categoria))	{
 								?>
 							<option value="<?php echo $rw['id_categoria'];?>"><?php echo $rw['nombre_categoria'];?></option>			
@@ -46,23 +46,23 @@
 			  </div>
 			  
 			<div class="form-group">
-				<label for="talla" class="col-sm-3 control-label">Talla</label>
+				<label for="descripcion_producto" class="col-sm-3 control-label">Talla</label>
 				<div class="col-sm-8">
-				  <input type="text" class="form-control" id="talla" name="talla" placeholder="Talla del producto" required pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números o letra unica" maxlength="8">
+				  <input type="text" class="form-control" id="descripcion_producto" name="descripcion-producto" placeholder="Talla del producto" required pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números o letra unica" maxlength="8">
 				</div>
 			</div>
 
 			<div class="form-group">
-				<label for="precio" class="col-sm-3 control-label">Precio</label>
+				<label for="precio_venta" class="col-sm-3 control-label">Precio</label>
 				<div class="col-sm-8">
-				  <input type="text" class="form-control" id="precio" name="precio" placeholder="Precio de venta del producto" required pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="8">
+				  <input type="text" class="form-control" id="precio_venta" name="precio_venta" placeholder="Precio de venta del producto" required pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="8">
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<label for="stock" class="col-sm-3 control-label">Stock</label>
+				<label for="inventario" class="col-sm-3 control-label">Stock</label>
 				<div class="col-sm-8">
-				  <input type="number" min="0" class="form-control" id="stock" name="stock" placeholder="Inventario inicial" required  maxlength="8">
+				  <input type="number" min="0" class="form-control" id="inventario" name="inventario" placeholder="Inventario inicial" required  maxlength="8">
 				</div>
 			</div>
 			 

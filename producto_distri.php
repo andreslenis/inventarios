@@ -1,25 +1,18 @@
 <?php
 	include ("seguridad.php");
-
-	/* Connect To Database*/
-	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
-	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
+	require_once ("config/db.php");
+	require_once ("config/conexion.php");
 	include("funciones.php");
 	
 	$active_productos="active";
 	$active_clientes="";
 	$active_usuarios="";	
-	$title="Producto | Simple Stock";
+	$title="Producto | Inventario Simple";
 	
 	if (isset($_POST['reference']) and isset($_POST['quantity'])){
 		$quantity=intval($_POST['quantity']);
 		$reference=mysqli_real_escape_string($con,(strip_tags($_POST["reference"],ENT_QUOTES)));
 		$id_producto=intval($_GET['id']);
-		/*$user_id=$_SESSION['user_id'];
-		$firstname=$_SESSION['firstname'];
-		$nota="$firstname agregó $quantity producto(s) al inventario";
-		$fecha=date("Y-m-d H:i:s");
-		guardar_historial($id_producto,$user_id,$fecha,$nota,$reference,$quantity);*/
 		$update=agregar_stock_pedido($id_producto,$quantity);
 		if ($update==1){
 			$message=1;
@@ -32,11 +25,6 @@
 		$quantity=intval($_POST['quantity_remove']);
 		$reference=mysqli_real_escape_string($con,(strip_tags($_POST["reference_remove"],ENT_QUOTES)));
 		$id_producto=intval($_GET['id']);
-		/*$user_id=$_SESSION['user_id'];
-		$firstname=$_SESSION['firstname'];
-		$nota="$firstname eliminó $quantity producto(s) del inventario";
-		$fecha=date("Y-m-d H:i:s");
-		guardar_historial($id_producto,$user_id,$fecha,$nota,$reference,$quantity);*/
 		$update=eliminar_stock_pedido($id_producto,$quantity);
 		if ($update==1){
 			$message=1;
@@ -47,7 +35,7 @@
 	
 	if (isset($_GET['id'])){
 		$id_producto=intval($_GET['id']);
-		$query=mysqli_query($con,"select * from pedidos where id_producto='$id_producto'");
+		$query=mysqli_query($con,"select * from  where id_producto='$id_producto'");
 		$row=mysqli_fetch_array($query);
 		
 	} else {
@@ -66,7 +54,7 @@
 	include("modal/agregar_stock_distri.php");
 	include("modal/eliminar_stock_distri.php");
 	include("modal/editar_productos_distri.php");
-	
+	include("footer.php");
 	?>
 	
 	<div class="container">
@@ -186,9 +174,6 @@
 </div>
 
 	
-	<?php
-	include("footer.php");
-	?>
 	<script type="text/javascript" src="js/productos_distri.js"></script>
   </body>
 </html>

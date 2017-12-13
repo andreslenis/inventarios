@@ -6,7 +6,7 @@
 	require_once ("config/conexion.php");
 	
 	$active_categoria="active";
-	$title="Categorías | Simple Invoice";
+	$title="Categorías | Inventario Simple";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,12 +53,7 @@
 				
 			</form>
 				<div id="resultados"></div>
-				<div class='outer_div'></div>
-			
-		
-	
-			
-			
+				<div class='outer_div'></div>		
 			
   </div>
 </div>

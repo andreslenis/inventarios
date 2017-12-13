@@ -6,29 +6,11 @@ function get_row($table,$row, $id, $equal){
 	$value=$rw[$row];
 	return $value;
 }
-
-function guardar_historial($id_producto,$user_id,$fecha,$nota,$reference,$quantity){
-	global $con;
-	$sql="INSERT INTO historial (id_historial, id_producto, user_id, fecha, nota, referencia, cantidad)
-	VALUES (NULL, '$id_producto', '$user_id', '$fecha', '$nota', '$reference', '$quantity');";
-	$query=mysqli_query($con,$sql);
-	
 	
 }
-function agregar_stock($id_producto,$quantity){
+function agregar_stock($id_producto,$quantity, $usuario){
 	global $con;
-	$update=mysqli_query($con,"update products set stock=stock+'$quantity' where id_producto='$id_producto'");
-	if ($update){
-			return 1;
-	} else {
-		return 0;
-	}	
-		
-}
-
-function agregar_stock_pedido($id_producto,$quantity){
-	global $con;
-	$update=mysqli_query($con,"update pedidos set stock=stock+'$quantity' where id_producto='$id_producto'");
+	$update=mysqli_query($con,"update inv set inv.cantidad_inventario = inv.cantidad_inventario +'$quantity' from inventarios inv inner join productos pro on inv.id_inventario = pro.id_inventario where id_producto='$id_producto'");
 	if ($update){
 			return 1;
 	} else {
@@ -39,7 +21,7 @@ function agregar_stock_pedido($id_producto,$quantity){
 
 function eliminar_stock($id_producto,$quantity){
 	global $con;
-	$update=mysqli_query($con,"update products set stock=stock-'$quantity' where id_producto='$id_producto'");
+	$update=mysqli_query($con,"update inv set inv.cantidad_inventario = inv.cantidad_inventario -'$quantity' from inventarios inv inner join productos pro on inv.id_inventario = pro.id_inventario where id_producto='$id_producto'");
 	if ($update){
 			return 1;
 	} else {
@@ -48,14 +30,4 @@ function eliminar_stock($id_producto,$quantity){
 		
 }
 
-function eliminar_stock_pedido($id_producto,$quantity){
-	global $con;
-	$update=mysqli_query($con,"update pedidos set stock=stock-'$quantity' where id_producto='$id_producto'");
-	if ($update){
-			return 1;
-	} else {
-		return 0;
-	}	
-		
-}
 ?>
